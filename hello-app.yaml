@@ -1,0 +1,104 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello-app
+  labels:
+    app: hello-app
+    service: hello-app
+spec:
+  ports:
+  - port: 80
+    name: http
+  selector:
+    app: hello-app
+
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: hello-app
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-app-v1
+  labels:
+    app: hello-app
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hello-app
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: hello-app
+        version: v1
+    spec:
+      serviceAccountName: hello-app
+      containers:
+      - name: hello-app
+        image: chris7444/hello-app:short-v1
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-app-v2
+  labels:
+    app: hello-app
+    version: v2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hello-app
+      version: v2
+  template:
+    metadata:
+      labels:
+        app: hello-app
+        version: v2
+    spec:
+      serviceAccountName: hello-app
+      containers:
+      - name: hello-app
+        image: chris7444/hello-app:short-v2
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-app-v3
+  labels:
+    app: hello-app
+    version: v3
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hello-app
+      version: v3
+  template:
+    metadata:
+      labels:
+        app: hello-app
+        version: v3
+    spec:
+      serviceAccountName: hello-app
+      containers:
+      - name: hello-app
+        image: chris7444/hello-app:short-v3
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
