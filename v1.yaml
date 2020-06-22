@@ -1,4 +1,7 @@
-# curl -H'host: hello-app.apps.clh.org' 10.15.160.241:80
+#
+# curl -H'host: hello-app.clh.org' http://<IstioGwyControolerIP>:80
+# expected result: round robin hello-app versions answer
+
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
