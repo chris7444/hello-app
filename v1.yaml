@@ -1,0 +1,34 @@
+# curl -H'host: hello-app.apps.clh.org' 10.15.160.241:80
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  annotations:
+  name: hello-app
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+  - hosts:
+    - '*/*.clh.org'
+    port:
+      name: http
+      number: 80
+      protocol: HTTP
+
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: hello-app
+spec:
+  gateways:
+  - hello-app
+  hosts:
+  - hello-app.clh.org
+  http:
+  - route:
+    - destination:
+        host: hello-app.hello-app.svc.cluster.local
+        port:
+          number: 8080
