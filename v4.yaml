@@ -1,7 +1,14 @@
 #
-# curl -H'host: hello-app.clh.org' http://<IstioGwyControolerIP>:80
+# PREREQ: You have defined a wildcard DNS (*) in apps.hpe.org (or your own subdomain)
+#   This wildcard resolves to the external IP address assigned to the istio-gateway service. In the example below, this
+#   IP address would be 10.15.160.241
+#       $ kubectl get svc  -n istio-system istio-ingressgateway
+#       NAME                   TYPE           CLUSTER-IP     EXTERNAL-IP     PORT(S)                      AGE
+#       istio-ingressgateway   LoadBalancer   10.43.77.248   10.15.160.241   80:31380/TCP,443:31390/TCP   6d1h
+#
+# curl http://hello-app.apps.hpe.org
 #   expected result: round robin hello-app version 2 and 3
-# curl -H'host: hello-app-v1.clh.org' http://<IstioGwyControolerIP>:80
+# curl http://hello-app-v1.apps.hpe.org
 #   expected result: specifically targets version 1 
 #
 
@@ -16,7 +23,7 @@ spec:
     istio: ingressgateway
   servers:
   - hosts:
-    - '*/*.clh.org'
+    - '*/*.apps.hpe.org'
     port:
       name: http
       number: 80
@@ -49,7 +56,7 @@ spec:
   gateways:
   - hello-app
   hosts:
-  - hello-app.clh.org
+  - hello-app.apps.hpe.org
   http:
   - route:
     - destination:
@@ -74,7 +81,7 @@ spec:
   gateways:
   - hello-app
   hosts:
-  - hello-app-v1.clh.org
+  - hello-app-v1.apps.hpe.org
   http:
   - route:
     - destination:
