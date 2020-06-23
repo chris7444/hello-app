@@ -1,0 +1,64 @@
+#
+# curl -H'host: hello-app.clh.org' http://<IstioGwyControolerIP>:80
+# expected result: round robin hello-app versions answer
+#
+
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  annotations:
+  name: hello-app
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+  - hosts:
+    - '*/*.clh.org'
+    port:
+      name: http
+      number: 80
+      protocol: HTTP
+
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: hello-app
+spec:
+  host: hello-app.hello-app.svc.cluster.local
+  subsets:
+  - labels:
+      version: v1
+    name: v1
+  - labels:
+      version: v2
+    name: v2
+  - labels:
+      version: v3
+    name: v3
+
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: hello-app
+spec:
+  gateways:
+  - hello-app
+  hosts:
+  - hello-app.clh.org
+  http:
+  - route:
+    - destination:
+        host: hello-app.hello-app.svc.cluster.local
+        port:
+          number: 8080
+        subset: v2
+      weight: 50
+    - destination:
+        host: hello-app.hello-app.svc.cluster.local
+        port:
+          number: 8080
+        subset: v3
+      weight: 50
