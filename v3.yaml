@@ -1,6 +1,8 @@
 #
 # curl -H'host: hello-app.clh.org' http://<IstioGwyControolerIP>:80
-# expected result: Only version 2 and version 3 of the app answer requests
+#   expected result: round robin hello-app version 2 and 3
+# curl -H'host: hello-app-v2.clh.org' http://<IstioGwyControolerIP>:80
+#   expected result: specifically targets version 1 
 #
 
 ---
@@ -62,3 +64,21 @@ spec:
           number: 8080
         subset: v3
       weight: 50
+
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: hello-app-v1
+spec:
+  gateways:
+  - hello-app
+  hosts:
+  - hello-app-v1.clh.org
+  http:
+  - route:
+    - destination:
+        host: hello-app.hello-app.svc.cluster.local
+        port:
+          number: 8080
+        subset: v1
