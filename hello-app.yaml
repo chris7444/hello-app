@@ -3,6 +3,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: hello-app
+  namespace: hello-app
   labels:
     app: hello-app
     service: hello-app
@@ -18,12 +19,14 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: hello-app
+  namespace: hello-app
 
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: hello-app-v1
+  namespace: hello-app
   labels:
     app: hello-app
     version: v1
@@ -52,6 +55,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: hello-app-v2
+  namespace: hello-app
   labels:
     app: hello-app
     version: v2
@@ -80,6 +84,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: hello-app-v3
+  namespace: hello-app
   labels:
     app: hello-app
     version: v3

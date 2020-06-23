@@ -3,11 +3,22 @@
 # expected result: round robin hello-app versions answer
 
 ---
+apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    field.cattle.io/projectId: p-q8w8l
+    istio-injection: enabled
+  name: hello-app
+spec: {}
+
+---
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
   annotations:
   name: hello-app
+  namespace: hello-app
 spec:
   selector:
     istio: ingressgateway
@@ -24,6 +35,7 @@ apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
   name: hello-app
+  namespace: hello-app
 spec:
   gateways:
   - hello-app

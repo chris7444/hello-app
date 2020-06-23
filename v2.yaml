@@ -2,6 +2,15 @@
 # curl -H'host: hello-app.clh.org' http://<IstioGwyControolerIP>:80
 # expected result: Only version 2 and version 3 of the app answer requests
 #
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    field.cattle.io/projectId: p-q8w8l
+    istio-injection: enabled
+  name: hello-app
+spec: {}
 
 ---
 apiVersion: networking.istio.io/v1alpha3
@@ -9,6 +18,7 @@ kind: Gateway
 metadata:
   annotations:
   name: hello-app
+  namespace: hello-app
 spec:
   selector:
     istio: ingressgateway
@@ -25,6 +35,7 @@ apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
 metadata:
   name: hello-app
+  namespace: hello-app
 spec:
   host: hello-app.hello-app.svc.cluster.local
   subsets:
@@ -43,6 +54,7 @@ apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
   name: hello-app
+  namespace: hello-app
 spec:
   gateways:
   - hello-app
